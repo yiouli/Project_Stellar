@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.httpserver;
+package org.stellar.gameplat.service.web;
 
 import java.util.Date;
 import java.util.Hashtable;

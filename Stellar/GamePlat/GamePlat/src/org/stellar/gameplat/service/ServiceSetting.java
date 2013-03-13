@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.httpserver;
+package org.stellar.gameplat.service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,13 +23,9 @@ public class ServiceSetting {
 	private ServiceSetting(String configPath) throws IOException {
 		File f = new File(configPath);
 		if(!f.exists() || !f.isFile());
-		StringBuffer sb = new StringBuffer();
-		String line;
 		BufferedReader reader = new BufferedReader(new FileReader(f));
-		while((line = reader.readLine()) != null)
-			sb.append(line);
+		setting = new Gson().fromJson(reader, Setting.class);
 		reader.close();
-		setting = new Gson().fromJson(sb.toString(), Setting.class);
 	}
 	
 	public static void init(String configPath) throws IOException {
@@ -38,7 +34,7 @@ public class ServiceSetting {
 		instance = new ServiceSetting(configPath);
 	}
 	
-	public static ServiceSetting Instance() {
+	public static ServiceSetting instance() {
 		if(instance == null)
 			throw new IllegalStateException("Not initialized, call init(configPath) first");
 		return instance;
@@ -65,9 +61,9 @@ public class ServiceSetting {
 	public static void main(String[] args) throws IOException {
 		String configPath = "testInput/config.json";
 		ServiceSetting.init(configPath);
-		System.out.println("repoDir : " + ServiceSetting.Instance().getRepoDir());
-		System.out.println("userInfoViewUrl : " + ServiceSetting.Instance().getUserInfoViewUrl());
-		System.out.println("lobbyViewUrl : " + ServiceSetting.Instance().getLobbyViewUrl());
-		System.out.println("gameViewUrl : " + ServiceSetting.Instance().getGameViewUrl());
+		System.out.println("repoDir : " + ServiceSetting.instance().getRepoDir());
+		System.out.println("userInfoViewUrl : " + ServiceSetting.instance().getUserInfoViewUrl());
+		System.out.println("lobbyViewUrl : " + ServiceSetting.instance().getLobbyViewUrl());
+		System.out.println("gameViewUrl : " + ServiceSetting.instance().getGameViewUrl());
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Hashtable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.stellar.gameplat.service.httpserver.ServiceSetting;
+import org.stellar.gameplat.service.ServiceSetting;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -35,7 +35,7 @@ public class UserInfoStoreTest {
 		info.username = name;
 		info.password = pw;
 		info.userinfo = ui;
-		File f = new File(ServiceSetting.Instance().getRepoDir()
+		File f = new File(ServiceSetting.instance().getRepoDir()
 					+ File.separator + info.username + ".json");
 		f.createNewFile();
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
@@ -55,7 +55,7 @@ public class UserInfoStoreTest {
 	public void init() throws IOException {
 		ServiceSetting.init("testInput/config.json");
 		//setup repository, clean up first
-		File repo = new File(ServiceSetting.Instance().getRepoDir());
+		File repo = new File(ServiceSetting.instance().getRepoDir());
 		if(!repo.exists())
 			repo.mkdirs();
 		File[] files = repo.listFiles();
@@ -66,7 +66,7 @@ public class UserInfoStoreTest {
 	
 	@After
 	public void cleanup() {
-		File repo = new File(ServiceSetting.Instance().getRepoDir());
+		File repo = new File(ServiceSetting.instance().getRepoDir());
 		File[] files = repo.listFiles();
 		for(File f : files)
 			f.delete();
@@ -92,7 +92,7 @@ public class UserInfoStoreTest {
 		assertTrue("add new user success", resJson.get("success").getAsBoolean());
 		assertEquals("add new user directTo", 
 				resJson.get("directTo").getAsString(),
-				ServiceSetting.Instance().getLobbyViewUrl());
+				ServiceSetting.instance().getLobbyViewUrl());
 	}
 
 	@Test
