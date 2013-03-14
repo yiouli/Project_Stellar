@@ -82,9 +82,9 @@ public class UrlMapper {
 	public static void main(String[] args) throws IOException {
 		UrlMapper.init("testInput/config.web.json");
 		UrlMapper mapper = UrlMapper.instance();
-		findService(mapper, "Get", "user/help");
-		findService(mapper, "Post", "user/help");
-		findService(mapper, "Get", "user/user1");
+		findService(mapper, "Get", "/gameplatform/user/help");
+		findService(mapper, "Post", "/gameplatform/user/help");
+		findService(mapper, "Get", "/gameplatform/user/user1");
 		findService(mapper, "Get", "otherservice/user1");
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 import org.stellar.gameplat.service.ServiceSetting;
 import org.stellar.gameplat.service.contract.IUserInfoService;
+import org.stellar.gameplat.service.contract.ServiceResponse;
 import org.stellar.gameplat.service.web.ResponseGenerator;
 
 import com.google.gson.Gson;
@@ -103,8 +104,7 @@ public class UserInfoStore implements IUserInfoService {
 	}
 
 	@Override
-	public String handleRequest(String url, String method, String reqBody) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+	public ServiceResponse handleRequest(String url, String method, String reqBody) {
+		return new ServiceResponse(200, ResponseGenerator.createJsonResponse(true, null));
 	}
 }

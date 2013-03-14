@@ -6,16 +6,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.Hashtable;
+import java.util.Enumeration;
 
 import org.stellar.gameplat.service.contract.IServiceContract;
+import org.stellar.gameplat.service.contract.ServiceResponse;
+import org.stellar.gameplat.service.ServiceLoader;
+import org.stellar.gameplat.service.ServiceSetting;
 
 import com.sun.net.httpserver.*;
 
-public class RequestDispatcher implements HttpHandler {
+class RequestDispatcher implements HttpHandler {
+
+	private UrlMapper mapper;
+	private ServiceLoader loader;
 	
-	private Hashtable<String, IServiceContract> services = new Hashtable<String, IServiceContract>();;
-	
+	RequestDispatcher(UrlMapper mapper, ServiceLoader loader) {
+		if(mapper == null || loader == null)
+			throw new NullPointerException();
+		this.mapper = mapper;
+		this.loader = loader;
+	}
 	
 	private String read(InputStream is) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -26,24 +36,35 @@ public class RequestDispatcher implements HttpHandler {
 		return sb.toString();
 	}
 
-	//dispatch to service via contract call and get response string
-	private String dispatch(String url, String method, String reqBody) {
-		if(!services.containsKey(url))
-			return "{\"success\":false,\"message\":\"service not found\"}";
-		return services.get(url).handleRequest(url, method, reqBody);
+	private void sendHttpResponse(HttpExchange t, ServiceResponse res) throws IOException {
+   		Headers headers = t.getResponseHeaders();
+   		headers.set("Content-Type", "text/json");
+   		Enumeration<String> enumKey = res.headers.keys();
+   		while(enumKey.hasMoreElements()) {
+   			String key = enumKey.nextElement();
+   			headers.set(key, res.headers.get(key));
+   		}
+   		t.sendResponseHeaders(res.status, res.body.length());
+   		OutputStream os = t.getResponseBody();
+   		os.write(res.body.getBytes());
+   		os.close();
+		
 	}
 	
 	@Override
 	public void handle(HttpExchange t) throws IOException {
-   		String reqBody = read(t.getRequestBody());
+		String method = t.getRequestMethod();
    		String url = t.getRequestURI().toString().toLowerCase();
-   		String resBody = dispatch(url, t.getRequestMethod(), reqBody);
-   		t.getResponseHeaders().set("Content-Type", "text/json");
-   		//need get response code from service??
-   		t.sendResponseHeaders(200, resBody.length());
-   		OutputStream os = t.getResponseBody();
-   		os.write(resBody.getBytes());
-   		os.close();
+   		String serviceClassName = mapper.getServiceClassName(method, url);
+   		if(serviceClassName == null) {
+   			t.sendResponseHeaders(404, 0);
+   			return;
+   		}
+   		IServiceContract service = loader.getServiceInstance(serviceClassName);
+   		if(service == null)
+   			throw new IllegalArgumentException("Service class not found: "+serviceClassName);
+   		String reqBody = read(t.getRequestBody());
+   		sendHttpResponse(t, service.handleRequest(url, method, reqBody));
 	}
 
 	/**
@@ -52,8 +73,13 @@ public class RequestDispatcher implements HttpHandler {
 	 */
 	public static void main(String[] args) throws IOException {
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 10);
-		server.createContext("/applications/myapp", new RequestDispatcher());
+		ServiceSetting.init("testInput/config.json");
+		UrlMapper.init("testInput/config.web.json");
+		ServiceLoader.init();
+		server.createContext("/gameplatform", 
+				new RequestDispatcher(UrlMapper.instance(), ServiceLoader.instance()));
 		server.setExecutor(null); // creates a default executor
 		server.start();
+		System.out.println("Server started...");
 	}
 }
