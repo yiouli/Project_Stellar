@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+	<title>User Info Test Page</title>
+</head>
+<body>
+	<div id="user_info_containter">
+		<div class="form">
+			<div class="field">
+				<span>Username: </span>
+				<input type="text" name="username" placeholder="Your username"/>
+			</div>
+			<div class="field">
+				<span>Password: </span>
+				<input type="password" name="password" placeholder="Your password"/>
+			</div>
+			<div class="bottom">
+				<button id="btn"><span>Button</span></button>
+			</div>
+			<div id="hint" style="display:none"><span></span></div>
+		</div> 
+	</div>
+	<script type="text/javascript" src="../lib/utility.js"></script>
+	<script type="text/javascript" src="../lib/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="../lib/underscore.js"></script>
+	<script type="text/javascript" src="../lib/backbone.js"></script>
+	<script type="text/javascript" src="model/UserInfoModel.js"></script>
+	<script type="text/javascript" src="views/UserInfoView.js"></script>
+	<script type="text/javascript" src="userInfoControl.js"></script>
+</body>
+
+
