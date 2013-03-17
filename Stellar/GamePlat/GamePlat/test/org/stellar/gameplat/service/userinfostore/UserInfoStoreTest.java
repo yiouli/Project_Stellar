@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,6 +32,8 @@ public class UserInfoStoreTest {
 
 	private Hashtable<String, UserInfo> infos = new Hashtable<String, UserInfo>();
 	private final String pw = "abcd1234";
+	private static final String configPath = "testInput/userInfoStoreTestConfig.json";
+	private static final String repoPath = "testInput/userInfoStoreTestRepo";
 	
 	private UserInfo addUserInfo(String name, String pw, String ui) throws IOException {
 		UserInfo info = new UserInfo();
@@ -55,7 +58,24 @@ public class UserInfoStoreTest {
 	
 	@BeforeClass
 	public static void init() throws IOException {
-		ServiceSetting.init("testInput/config.json");
+		//create test config
+		File config = new File(configPath);
+		config.createNewFile();
+		JsonObject json = new JsonObject();
+		json.addProperty("repoDir", repoPath);
+		json.addProperty("userInfoViewUrl", "user info url");
+		json.addProperty("lobbyViewUrl", "lobby url");
+		json.addProperty("gameViewUrl", "game view url");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(config));
+		writer.write(json.toString());
+		writer.close();
+		ServiceSetting.init(configPath);
+	}
+	
+	@AfterClass
+	public static void dispose() {
+		File config = new File(configPath);
+		config.delete();
 	}
 	
 	@Before
@@ -101,7 +121,6 @@ public class UserInfoStoreTest {
 		JsonParser parser = new JsonParser();
 		UserInfo info = createUserInfo("user4", pw, "user4's info");
 		String result = store.addUserInfo(info).body;
-		System.out.println(result);
 		JsonObject resJson = parser.parse(result).getAsJsonObject();
 		assertTrue("add new user success", resJson.get("success").getAsBoolean());
 		assertEquals("add new user directTo", 
