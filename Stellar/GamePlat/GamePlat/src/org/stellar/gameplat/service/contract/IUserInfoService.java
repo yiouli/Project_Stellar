@@ -1,8 +1,11 @@
 package org.stellar.gameplat.service.contract;
 
+import org.stellar.gameplat.service.contract.data.ServiceResponse;
+import org.stellar.gameplat.service.contract.data.UserInfo;
+
 public interface IUserInfoService extends IServiceContract {
 
-	public String addUserInfo(String userInfoJson);
-	public String getUserInfo(String username, String password);
-	public String setUserInfo(String userInfoJson);
+	public ServiceResponse addUserInfo(UserInfo info);
+	public ServiceResponse getUserInfo(String username, String password);
+	public ServiceResponse setUserInfo(UserInfo info);
 }

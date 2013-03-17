@@ -10,8 +10,10 @@ import java.util.Hashtable;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.stellar.gameplat.service.ServiceSetting;
+import org.stellar.gameplat.service.contract.data.UserInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -51,9 +53,13 @@ public class UserInfoStoreTest {
 		addUserInfo("user3", pw, "user3's info");
 	}
 	
-	@Before
-	public void init() throws IOException {
+	@BeforeClass
+	public static void init() throws IOException {
 		ServiceSetting.init("testInput/config.json");
+	}
+	
+	@Before
+	public void setup() throws IOException {
 		//setup repository, clean up first
 		File repo = new File(ServiceSetting.instance().getRepoDir());
 		if(!repo.exists())
@@ -73,20 +79,28 @@ public class UserInfoStoreTest {
 		repo.delete();
 	}
 	
-	private String getJsonString(String username, String password, String userinfo) {
+	private UserInfo createUserInfo(String username, String password, String userinfo) {
+		UserInfo info = new UserInfo();
+		info.username = username;
+		info.password = password;
+		info.userinfo = userinfo;
+		return info;
+	}
+	
+	/*private String getJsonString(String username, String password, String userinfo) {
 		JsonObject json = new JsonObject();
 		json.addProperty("username", username);
 		json.addProperty("password", password);
 		json.addProperty("userInfo", userinfo);
 		return json.toString();
-	}
+	}*/
 	
 	@Test
 	public void testAddUserInfo() throws IOException {
 		UserInfoStore store = new UserInfoStore();
 		JsonParser parser = new JsonParser();
-		String jsonStr = getJsonString("user4", pw, "user4's info");
-		String result = store.addUserInfo(jsonStr);
+		UserInfo info = createUserInfo("user4", pw, "user4's info");
+		String result = store.addUserInfo(info).body;
 		System.out.println(result);
 		JsonObject resJson = parser.parse(result).getAsJsonObject();
 		assertTrue("add new user success", resJson.get("success").getAsBoolean());

@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.userinfostore;
+package org.stellar.gameplat.service.contract.data;
 
 public class UserInfo {
 	
