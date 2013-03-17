@@ -1,0 +1,15 @@
+{
+    "mapping" :
+        [
+            {
+                "method" : "GET",
+                "url" : "/gameplatform/user/help",
+                "className" : "some manual html presenter"
+            },
+            {
+                "url" : "/gameplatform/user/.*",
+                "exclude" : "/gameplatform/user/help",
+                "className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
+            }
+        ]
+}
