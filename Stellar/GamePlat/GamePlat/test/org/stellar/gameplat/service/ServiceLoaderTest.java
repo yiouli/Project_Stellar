@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.stellar.gameplat.service.contract.IServiceContract;
-import org.stellar.gameplat.service.contract.ServiceResponse;
+import org.stellar.gameplat.service.contract.data.ServiceResponse;
 
 class SimpleService implements IServiceContract {
 

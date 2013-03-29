@@ -6,20 +6,25 @@ import java.util.Hashtable;
 
 import org.stellar.gameplat.service.ServiceSetting;
 import org.stellar.gameplat.service.contract.IUserInfoService;
-import org.stellar.gameplat.service.contract.ServiceResponse;
-import org.stellar.gameplat.service.web.ResponseGenerator;
+import org.stellar.gameplat.service.contract.data.ServiceResponse;
+import org.stellar.gameplat.service.contract.data.UserInfo;
+import org.stellar.gameplat.service.webexchange.RequestInterpreter;
+import org.stellar.gameplat.service.webexchange.RequestMethod;
+import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 
 import com.google.gson.Gson;
 
 public class UserInfoStore implements IUserInfoService {
 
+	private ServiceSetting setting;
 	private final FileRepository repo;
 	private Hashtable<String, UserInfo> userInfoTable;
 	private Gson gson;
 	private boolean initialized;
 	
 	public UserInfoStore() throws IOException {
-		repo = new FileRepository(ServiceSetting.instance().getRepoDir());
+		setting = ServiceSetting.instance();
+		repo = new FileRepository(setting.getRepoDir());
 		userInfoTable = new Hashtable<String, UserInfo>();
 		gson = new Gson();
 		init();
@@ -28,7 +33,7 @@ public class UserInfoStore implements IUserInfoService {
 	private void init() throws IOException {
 		if(initialized)
 			return;
-		assert userInfoTable != null && gson != null && repo != null;
+		assert setting != null && userInfoTable != null && gson != null && repo != null;
 		HashSet<String> usernames = repo.getKeys();
 		for(String username : usernames) {
 			String json = repo.get(username);
@@ -38,73 +43,73 @@ public class UserInfoStore implements IUserInfoService {
 	}
 	
 	@Override
-	public String addUserInfo(String userInfoJson) {
+	public ServiceResponse addUserInfo(UserInfo info) {
 		assert gson != null;
 		try {
-			UserInfo info = gson.fromJson(userInfoJson, UserInfo.class);
 			if(userInfoTable.containsKey(info.username))
-				return ResponseGenerator.createJsonResponse(false,
-						new String[]{"Message"}, 
-						new String[]{"User already exists"}, null);
-			repo.put(info.username, userInfoJson);
+				return ResponseGenerator.serviceResponse(409, "User already exists");
+			repo.put(info.username, gson.toJson(info));
 			userInfoTable.put(info.username, info);
-			return ResponseGenerator.createJsonResponse(true, 
-					ServiceSetting.instance().getLobbyViewUrl());
+			return ResponseGenerator.serviceResponse(200, null, setting.getLobbyViewUrl());
 		} catch (Exception ex) {
-			return ResponseGenerator.createJsonResponse(false,
-					new String[]{"Message"}, 
-					new String[]{ex.getMessage()}, null);
+			return ResponseGenerator.serviceResponse(500, ex.getMessage());
 		}
 	}
 
 	@Override
-	public String getUserInfo(String username, String password) {
+	public ServiceResponse getUserInfo(String username, String password) {
 		assert gson != null;
 		if(!userInfoTable.containsKey(username))
-			return ResponseGenerator.createJsonResponse(false,
-					new String[]{"Message"}, 
-					new String[]{"User doesn't exist"},
-					ServiceSetting.instance().getUserInfoViewUrl());
+			return ResponseGenerator.serviceResponse(409, 
+						"User doesn't exist", setting.getUserInfoViewUrl());
 		UserInfo info = userInfoTable.get(username);
-		if(!password.equals(info.password))
-			return ResponseGenerator.createJsonResponse(false,
-					new String[]{"Message"}, 
-					new String[]{"Wrong password"},
-					ServiceSetting.instance().getUserInfoViewUrl());
-		return ResponseGenerator.createJsonResponse(true,
-				new String[]{"userInfo"}, 
-				new UserInfo[]{info}, 
-				ServiceSetting.instance().getLobbyViewUrl());
+		if(info.password != null && !info.password.equals(password))
+			return ResponseGenerator.serviceResponse(401, 
+					"Wrong password", setting.getUserInfoViewUrl());
+		return new ServiceResponse(200,
+					ResponseGenerator.jsonResponse(true,
+						new String[]{"userInfo"}, 
+						new UserInfo[]{info}, 
+						ServiceSetting.instance().getLobbyViewUrl()));
 	}
 
 	@Override
-	public String setUserInfo(String userInfoJson) {
+	public ServiceResponse setUserInfo(UserInfo info) {
 		assert gson != null;
 		try {
-			UserInfo info = gson.fromJson(userInfoJson, UserInfo.class);
 			if(!userInfoTable.containsKey(info.username))
-				return ResponseGenerator.createJsonResponse(false,
-						new String[]{"Message"}, 
-						new String[]{"User doesn't exist"},
-						ServiceSetting.instance().getUserInfoViewUrl());
-			if(!info.password.equals(userInfoTable.get(info.username)))
-				return ResponseGenerator.createJsonResponse(false,
-						new String[]{"Message"}, 
-						new String[]{"Wrong password"},
-						ServiceSetting.instance().getUserInfoViewUrl());
-			repo.put(info.username, userInfoJson);
+				return ResponseGenerator.serviceResponse(409, 
+							"User doesn't exist", setting.getUserInfoViewUrl());
+			UserInfo storedInfo = userInfoTable.get(info.username);
+			if(storedInfo.password != null && !storedInfo.password.equals(info.password))
+				return ResponseGenerator.serviceResponse(401, 
+						"Wrong password", setting.getUserInfoViewUrl());
+			repo.put(info.username, gson.toJson(info));
 			userInfoTable.put(info.username, info);
-			return ResponseGenerator.createJsonResponse(true, 
-					ServiceSetting.instance().getLobbyViewUrl());
+			return ResponseGenerator.serviceResponse(200, null, setting.getLobbyViewUrl());
 		} catch (Exception ex) {
-			return ResponseGenerator.createJsonResponse(false,
-					new String[]{"Message"}, 
-					new String[]{ex.getMessage()}, null);
+			return ResponseGenerator.serviceResponse(500, ex.getMessage());
 		}
 	}
 
 	@Override
 	public ServiceResponse handleRequest(String url, String method, String reqBody) {
-		return new ServiceResponse(200, ResponseGenerator.createJsonResponse(true, null));
+		try {
+			UserInfo info = gson.fromJson(reqBody, UserInfo.class);
+			if(info == null)
+				info = new UserInfo();
+			String[] tokens = RequestInterpreter.tokenize(url);
+			info.username = tokens[tokens.length-1];
+			//Hashtable<String, String> qv = RequestInterpreter.getQueryValues(url);
+			RequestMethod reqMethod = RequestInterpreter.getRequestMethod(method);
+			switch(reqMethod) {
+				case Get: return getUserInfo(info.username, info.password);
+				case Set: return setUserInfo(info);
+				case Post: return addUserInfo(info);
+				default: return ResponseGenerator.serviceResponse(404, "Method not supported");
+			}
+		} catch(Exception ex) {
+			return ResponseGenerator.serviceResponse(500, ex.getMessage());
+		}
 	}
 }

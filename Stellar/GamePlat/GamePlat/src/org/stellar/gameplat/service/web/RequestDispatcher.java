@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 import java.util.Enumeration;
 
 import org.stellar.gameplat.service.contract.IServiceContract;
-import org.stellar.gameplat.service.contract.ServiceResponse;
+import org.stellar.gameplat.service.contract.data.ServiceResponse;
 import org.stellar.gameplat.service.ServiceLoader;
 import org.stellar.gameplat.service.ServiceSetting;
 

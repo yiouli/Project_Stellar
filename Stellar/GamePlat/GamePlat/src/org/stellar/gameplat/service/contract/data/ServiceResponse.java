@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.contract;
+package org.stellar.gameplat.service.contract.data;
 
 import java.util.Hashtable;
 
