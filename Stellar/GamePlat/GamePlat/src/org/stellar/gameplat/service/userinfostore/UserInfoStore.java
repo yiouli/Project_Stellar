@@ -93,17 +93,15 @@ public class UserInfoStore implements IUserInfoService {
 	}
 
 	@Override
-	public ServiceResponse handleRequest(String url, String method, String reqBody) {
+	public ServiceResponse handleRequest(String url, String method, String reqBody, Hashtable<String, String> params) {
 		try {
 			UserInfo info = gson.fromJson(reqBody, UserInfo.class);
 			if(info == null)
 				info = new UserInfo();
-			String[] tokens = RequestInterpreter.tokenize(url);
-			info.username = tokens[tokens.length-1];
-			//Hashtable<String, String> qv = RequestInterpreter.getQueryValues(url);
+			Hashtable<String, String> qv = RequestInterpreter.getQueryValues(url);
 			RequestMethod reqMethod = RequestInterpreter.getRequestMethod(method);
 			switch(reqMethod) {
-				case Get: return getUserInfo(info.username, info.password);
+				case Get: return getUserInfo(params.get("username"), qv.get("password"));
 				case Set: return setUserInfo(info);
 				case Post: return addUserInfo(info);
 				default: return ResponseGenerator.serviceResponse(404, "Method not supported");

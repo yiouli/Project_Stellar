@@ -13,4 +13,8 @@ public class ServiceResponse {
 		this.body = body;
 		headers = new Hashtable<String, String>();
 	}
+	
+	public boolean success() {
+		return status >= 200 && status <= 300;
+	}
 }

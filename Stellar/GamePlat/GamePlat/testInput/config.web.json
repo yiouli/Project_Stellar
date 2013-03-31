@@ -1,15 +1,28 @@
 {
+	"service" :
+		[
+			{
+				"name" : "help",
+				"className" : "some manual html presenter"
+			},
+			{
+				"name" : "userInfo",
+				"className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
+			}
+		],
     "mapping" :
         [
             {
+            	"name" : "help",
                 "method" : "GET",
-                "url" : "/gameplatform/user/help",
-                "className" : "some manual html presenter"
+                "pattern" : "/gameplatform/user/help",
+                "service" : "help"
             },
             {
-                "url" : "/gameplatform/user/.*",
+            	"name" : "userInfo",
+                "pattern" : "/gameplatform/user/#{username}",
                 "exclude" : "/gameplatform/user/help",
-                "className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
+                "service" : "userInfo"
             }
         ]
 }

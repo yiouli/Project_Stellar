@@ -47,6 +47,13 @@ public class RequestInterpreter {
 		return url.split(DELIMITER);
 	}
 	
+	public static String removeQueryString(String url) {
+		int idx = url.indexOf('?');
+		if(idx == -1)
+			return url;
+		return url.substring(0, idx);
+	}
+	
 	//----test stub-----------------------------------------------
 	
 	public static void main(String[] args) {

@@ -2,6 +2,8 @@ package org.stellar.gameplat.service;
 
 import static org.junit.Assert.*;
 
+import java.util.Hashtable;
+
 import org.junit.Test;
 import org.stellar.gameplat.service.contract.IServiceContract;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
@@ -11,7 +13,8 @@ class SimpleService implements IServiceContract {
 	static final String message = "hello";
 	
 	@Override
-	public ServiceResponse handleRequest(String url, String method, String reqBody) {
+	public ServiceResponse handleRequest(String url, String method, 
+			String reqBody, Hashtable<String, String> params) {
 		return new ServiceResponse(200, message);
 	}
 }
@@ -24,7 +27,7 @@ public class ServiceLoaderTest {
 		String className = "org.stellar.gameplat.service.SimpleService";
 		IServiceContract service = ServiceLoader.instance().getServiceInstance(className);
 		assertNotNull("service instance", service);
-		ServiceResponse res = service.handleRequest(null, null, null);
+		ServiceResponse res = service.handleRequest(null, null, null, null);
 		assertEquals("service response status", 200, res.status);
 		assertEquals("service response body", SimpleService.message, res.body);
 	}

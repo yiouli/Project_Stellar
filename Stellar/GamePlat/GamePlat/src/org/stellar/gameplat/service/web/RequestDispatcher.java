@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 import org.stellar.gameplat.service.contract.IServiceContract;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
@@ -64,7 +65,8 @@ class RequestDispatcher implements HttpHandler {
    		if(service == null)
    			throw new IllegalArgumentException("Service class not found: "+serviceClassName);
    		String reqBody = read(t.getRequestBody());
-   		sendHttpResponse(t, service.handleRequest(url, method, reqBody));
+		Hashtable<String, String> params = mapper.getParameters(url, method);
+   		sendHttpResponse(t, service.handleRequest(url, method, reqBody, params));
 	}
 
 	/**
