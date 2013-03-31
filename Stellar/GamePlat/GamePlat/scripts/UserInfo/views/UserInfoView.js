@@ -13,9 +13,13 @@ Dependency:
          username_fld = this.$el.find("input[name='username']");
          pwd_fld = this.$el.find("input[name='password']");
          //this.model.bind("inputFocusOut", this.validate);
-         this.$el.on("focusout", "input", that.validate);
+         this.$el.on("focusout", "input", function(){
+             that.validate();
+         });
 
          this.$el.on("click", "button", function(){
+            //that.model.get("userInfo").set("username", username_fld.val());            
+            //that.model.get("userInfo").set("password", password_fld.val());
             that.model.set("userInfo", {
                username: username_fld.val(),
                password: pwd_fld.val()
@@ -24,22 +28,16 @@ Dependency:
          });
       },
 
-      try : function(){
-         
-      },
-
       validate : function() {
-         var func_map = {
-            "username" : function($fld) {
-               return !!$fld.val();   //username field should not be empty
-            },
-            "password" : function($fld) {
-               return !!$fld.val() && $fld.val().length >= 8;  //password field should not be empty and char length should larger than 8
-            }
-         }
-         console.log(func_map[$(this).attr("name")]($(this)));
+         var that = this;
+         var inputs = this.$el.find("input");
          
-      }
+         inputs.each(function(index, input){
+            if(!$(input).val().trim()){
+               that.$el.find("#hint").show();
+            }
+         });
+      },
 
 
 
