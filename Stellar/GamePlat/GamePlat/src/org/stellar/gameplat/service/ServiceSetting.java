@@ -15,6 +15,7 @@ public class ServiceSetting {
 		String userInfoViewUrl;
 		String lobbyViewUrl;
 		String gameViewUrl;
+		String userInfoServiceUrl;
 	}
 	
 	private Setting setting;
@@ -55,6 +56,10 @@ public class ServiceSetting {
 	public String getGameViewUrl() {
 		return setting.gameViewUrl;
 	}
+
+	public String getUserInfoServiceUrl() {
+		return setting.userInfoServiceUrl;
+	}
 	
 	//----test stub--------------------------------------
 	
@@ -65,5 +70,6 @@ public class ServiceSetting {
 		System.out.println("userInfoViewUrl : " + ServiceSetting.instance().getUserInfoViewUrl());
 		System.out.println("lobbyViewUrl : " + ServiceSetting.instance().getLobbyViewUrl());
 		System.out.println("gameViewUrl : " + ServiceSetting.instance().getGameViewUrl());
+		System.out.println("userInfoServiceUrl : " + ServiceSetting.instance().getUserInfoServiceUrl());
 	}
 }

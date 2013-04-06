@@ -74,14 +74,14 @@ public class UserInfoStore implements IUserInfoService {
 	}
 
 	@Override
-	public ServiceResponse setUserInfo(UserInfo info) {
+	public ServiceResponse setUserInfo(String password, UserInfo info) {
 		assert gson != null;
 		try {
 			if(!userInfoTable.containsKey(info.username))
 				return ResponseGenerator.serviceResponse(409, 
 							"User doesn't exist", setting.getUserInfoViewUrl());
 			UserInfo storedInfo = userInfoTable.get(info.username);
-			if(storedInfo.password != null && !storedInfo.password.equals(info.password))
+			if(storedInfo.password != null && !storedInfo.password.equals(password))
 				return ResponseGenerator.serviceResponse(401, 
 						"Wrong password", setting.getUserInfoViewUrl());
 			repo.put(info.username, gson.toJson(info));
@@ -100,9 +100,10 @@ public class UserInfoStore implements IUserInfoService {
 				info = new UserInfo();
 			Hashtable<String, String> qv = RequestInterpreter.getQueryValues(url);
 			RequestMethod reqMethod = RequestInterpreter.getRequestMethod(method);
+			info.username = params.get("username");
 			switch(reqMethod) {
-				case Get: return getUserInfo(params.get("username"), qv.get("password"));
-				case Set: return setUserInfo(info);
+				case Get: return getUserInfo(info.username, qv.get("password"));
+				case Set: return setUserInfo(qv.get("password"), info);
 				case Post: return addUserInfo(info);
 				default: return ResponseGenerator.serviceResponse(404, "Method not supported");
 			}

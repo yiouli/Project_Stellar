@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.stellar.gameplat.service.ServiceSetting;
 import org.stellar.gameplat.service.contract.data.UserInfo;
 import org.stellar.gameplat.service.web.UrlMapper;
 
@@ -21,6 +22,11 @@ public class UserInfoClient {
 	
 	public String getLastMessage() {
 		return lastMessage;
+	}
+	
+	public UserInfoClient() {
+		this.hostUrl = ServiceSetting.instance().getUserInfoServiceUrl();
+		assert this.hostUrl != null;
 	}
 	
 	public UserInfoClient(String hostUrl) {
@@ -60,6 +66,10 @@ public class UserInfoClient {
 		}
 		Gson gson = new Gson();
 		return gson.fromJson(o.get("userInfo"), UserInfo.class);
+	}
+	
+	public boolean authenticate(String username, String password) throws IOException {
+		return getUserInfo(username, password) != null;
 	}
 	
 	//----test stub--------------------------------------------------------------------

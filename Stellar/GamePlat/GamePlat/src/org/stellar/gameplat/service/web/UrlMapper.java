@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
@@ -122,6 +123,10 @@ public class UrlMapper {
 		return ret;
 	}
 
+	public boolean addMappings(Collection<UrlMapping> mappings) {
+		return false;
+	}
+	
 	public String getUrl(String mappingName, String[] params) {
 		UrlMapping m = mappings.get(mappingName);
 		if(m == null)
