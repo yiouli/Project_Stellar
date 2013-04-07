@@ -4,10 +4,12 @@ import org.stellar.gameplat.service.contract.data.ServiceResponse;
 
 public interface ILobbyService extends IServiceContract {
 
-	public String host();
-	public String[] participants();
-	public boolean isReady();
-	public ServiceResponse changeHost(String username, String password, int newHost);
-	public ServiceResponse startGame(String username, String password);
-	public ServiceResponse changeSetting(String username, String password, String gameParams);
+	public int[] getLobbyIds();
+	public ServiceResponse lobby(int lobbyId);
+	public String host(int lobbyId);
+	public String[] participants(int lobbyId);
+	public boolean isReady(int lobbyId);
+	public ServiceResponse changeHost(int lobbyId, String username, String password, int newHost);
+	public ServiceResponse startGame(int lobbyId, String username, String password);
+	public ServiceResponse changeSetting(int lobbyId, String username, String password, String gameParams);
 }

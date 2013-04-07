@@ -9,13 +9,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class ResponseGenerator {
-
-	public static ServiceResponse serviceResponse(int status) {
-		return serviceResponse(status, null);
-	}
 	
+	/**
+	 * Discourage client to skip custom message describing the failing result 
+	 * while not directing user to elsewhere.
+	 * @param status
+	 * @param message
+	 * @return
+	 */
 	public static ServiceResponse serviceResponse(int status, String message) {
-		return serviceResponse(status, message, null);
+		ServiceResponse res = serviceResponse(status, message, null);
+		assert res.success() || message != null;
+		return res;
 	}
 	
 	public static ServiceResponse serviceResponse(int status, String message, String directTo) {

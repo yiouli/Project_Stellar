@@ -33,7 +33,7 @@ public class ResourceService implements IResourceService {
 		String resourcePath = FOLDER+ "/"+params.get("pagePath");
 		String content = getResouce(resourcePath);
 		if(content == null)
-			return ResponseGenerator.serviceResponse(404, "Page not found");
+			return ResponseGenerator.serviceResponse(404, "Resource not found");
 		ServiceResponse res = ResponseGenerator.serviceResponse(200, null);
 		res.body = content;
 		setContentType(resourcePath, res.headers);
