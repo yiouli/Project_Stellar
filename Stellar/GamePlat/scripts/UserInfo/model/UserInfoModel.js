@@ -13,7 +13,8 @@
 			var that = this;
 			this.bind("change:userInfo", function(){
 				console.log(that.get("userInfo"));
-			})
+			});
+         this.bind("submitLogin", this.send_login_info);
 		},
 		
 		sendSignUpInfo : function() {
@@ -44,33 +45,32 @@
 		},
 
 
-   	    send_login_info : function(user_login_info){
-   	    	var that = this;
-			//var userInfo = this.get("userInfo");
-   	    	var options = {
-   	    		url : that.get("path"),
-   	    		type : "GET",
-   	    		data : user_login_info || {}, //username, password
-   	    	}
-   	    	options.success = function(res){
-   	    		if(res && res.success) {
-   	    			if(res.directTo){
-   	    				//that.set("url", res.directTo);
-   	    				//that.direct_to(that.get("url"));
-   	    				that.direct_to(res.directTo);
-   	    			}
-   	    			
-   	    		}
-   	    	}
-   	    	options.error = function(res){
-   	    		console.log()
-   	    	}
-   	    	Utility.doAjax(options);
-   	    },
+    send_login_info : function(){
+    	var that = this;//, json_obj = $.toJSON();
+      var userInfo = this.get("userInfo");
+	//var userInfo = this.get("userInfo");
+    	var options = {
+    		url : that.get("path"),
+    		type : "GET",
+    		data : $.toJSON(userInfo)//user_login_info || {}, //username, password
+    	}
+    	options.success = function(res){
+    		if(res && res.success) {
+    			if(res.directTo){
+    				that.direct_to(res.directTo);
+    			}
+    			
+    		}
+    	}
+    	options.error = function(res){
+    		console.log()
+    	}
+    	Utility.doAjax(options);
+    },
 
-   	    set_user_info : function(user_info){
-   	    	this.set("userInfo", user_info);
-   	    },
+    set_user_info : function(user_info){
+    	this.set("userInfo", user_info);
+    },
 	});
 
 }(window))
