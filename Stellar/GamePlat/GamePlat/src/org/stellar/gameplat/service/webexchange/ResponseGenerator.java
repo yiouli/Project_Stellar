@@ -10,6 +10,10 @@ import com.google.gson.JsonObject;
 
 public class ResponseGenerator {
 
+	public static ServiceResponse serviceResponse(int status) {
+		return serviceResponse(status, null);
+	}
+	
 	public static ServiceResponse serviceResponse(int status, String message) {
 		return serviceResponse(status, message, null);
 	}

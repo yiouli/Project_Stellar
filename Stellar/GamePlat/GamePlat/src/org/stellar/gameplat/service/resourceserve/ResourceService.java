@@ -1,32 +1,52 @@
-package org.stellar.gameplat.service.pageserve;
+package org.stellar.gameplat.service.resourceserve;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Hashtable;
 
-import org.stellar.gameplat.service.contract.IPageService;
+import org.stellar.gameplat.service.contract.IResourceService;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
 import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 
-public class PageService implements IPageService {
+public class ResourceService implements IResourceService {
 
+	public static final String FOLDER = "resource";
+	public final FileNameMap contentTypeMap;
+	
+	public ResourceService() {
+		contentTypeMap = URLConnection.getFileNameMap();
+	}
+	
+	private void setContentType(String resourcePath, Hashtable<String, String> headers) {
+		String type = getContentType(resourcePath);
+		if(type != null)
+			headers.put("Content-Type", type);
+	}
+	
 	@Override
 	public ServiceResponse handleRequest(String url, String method,
 			String reqBody, Hashtable<String, String> params) {
-		String pagePath = "page/"+params.get("pagePath");
-		String content = getPage(pagePath);
+		String resourcePath = FOLDER+ "/"+params.get("pagePath");
+		String content = getResouce(resourcePath);
 		if(content == null)
 			return ResponseGenerator.serviceResponse(404, "Page not found");
 		ServiceResponse res = ResponseGenerator.serviceResponse(200, null);
 		res.body = content;
-		res.headers.put("Content-Type", "text/html");
+		setContentType(resourcePath, res.headers);
 		return res;
 	}
 
 	@Override
-	public String getPage(String pagePath) {
+	public String getContentType(String resourcePath) {
+		return contentTypeMap.getContentTypeFor(resourcePath);
+	}
+	
+	@Override
+	public String getResouce(String pagePath) {
 		File f = new File(pagePath);
 		if(!f.exists())
 			return null;
@@ -48,8 +68,9 @@ public class PageService implements IPageService {
 	//----test stub-----------------------------------
 	
 	public static void main(String[] args) {
-		PageService serv = new PageService();
-		System.out.println(serv.getPage("page/hello.html"));
+		ResourceService serv = new ResourceService();
+		System.out.println(serv.getResouce("page/hello.html"));
 	}
+
 	
 }

@@ -8,9 +8,12 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map.Entry;
 
 import org.stellar.gameplat.service.contract.IServiceContract;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
+import org.stellar.gameplat.service.webexchange.RequestInterpreter;
 import org.stellar.gameplat.service.ServiceLoader;
 import org.stellar.gameplat.service.ServiceSetting;
 
@@ -34,6 +37,7 @@ class RequestDispatcher implements HttpHandler {
 		String line;
 		while((line = reader.readLine()) != null)
 			sb.append(line);
+		reader.close();
 		return sb.toString();
 	}
 
@@ -59,13 +63,23 @@ class RequestDispatcher implements HttpHandler {
    		String serviceClassName = mapper.getServiceClassName(method, url);
    		if(serviceClassName == null) {
    			t.sendResponseHeaders(404, 0);
+   			t.getResponseBody().close();
    			return;
    		}
    		IServiceContract service = loader.getServiceInstance(serviceClassName);
-   		if(service == null)
-   			throw new IllegalArgumentException("Service class not found: "+serviceClassName);
+   		if(service == null) {
+   			System.err.println("Service class not found: "+serviceClassName);
+   			t.sendResponseHeaders(404, 0);
+   			t.getResponseBody().close();
+   			return;
+   		}
    		String reqBody = read(t.getRequestBody());
 		Hashtable<String, String> params = mapper.getParameters(url, method);
+		Headers reqHeaders = t.getRequestHeaders();
+		for(Entry<String, List<String>> entry : reqHeaders.entrySet())
+			if(!params.containsKey(entry.getKey()))
+				params.put(entry.getKey(), 
+						RequestInterpreter.getHeaderEntryValueString(entry.getValue()));
    		sendHttpResponse(t, service.handleRequest(url, method, reqBody, params));
 	}
 

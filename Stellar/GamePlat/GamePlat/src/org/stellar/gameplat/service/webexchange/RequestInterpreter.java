@@ -1,10 +1,12 @@
 package org.stellar.gameplat.service.webexchange;
 
+import java.util.Collection;
 import java.util.Hashtable;
 
 public class RequestInterpreter {
 
 	public static final String DELIMITER = "/";
+	public static final String DELIMITER_HEADER_ENTRY_VALUE = ";";
 	
 	public static RequestMethod getRequestMethod(String method) {
 		if(method.equalsIgnoreCase("Get"))
@@ -52,6 +54,26 @@ public class RequestInterpreter {
 		if(idx == -1)
 			return url;
 		return url.substring(0, idx);
+	}
+	
+	public static String getHeaderEntryValueString(Collection<String> entryValues) {
+		StringBuffer sb = new StringBuffer();
+		boolean first = true;
+		for(String val : entryValues) {
+			if(!first)
+				sb.append(DELIMITER_HEADER_ENTRY_VALUE);
+			first = false;
+			sb.append(val);
+		}
+		return sb.toString();
+	}
+	
+	public static String[] getHeaderEntryValues(String entryValueStr) {
+		String[] vals = entryValueStr.split(DELIMITER_HEADER_ENTRY_VALUE);
+		String[] ret = new String[vals.length];
+		for(int i = 0; i < vals.length; i++)
+			ret[i] = vals[i].trim();
+		return ret;
 	}
 	
 	//----test stub-----------------------------------------------

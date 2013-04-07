@@ -10,8 +10,8 @@
 				"className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
 			},
 			{
-				"name" : "pageServe",
-				"className" : "org.stellar.gameplat.service.pageserve.PageService"
+				"name" : "resource",
+				"className" : "org.stellar.gameplat.service.resourceserve.ResourceService"
 			}
 		],
     "mapping" :
@@ -30,9 +30,9 @@
             },
             
             {
-            	"name" : "pageServe",
-                "pattern" : "/gameplatform/page/#{pagePath}",
-                "service" : "pageServe"
+            	"name" : "resource",
+                "pattern" : "/gameplatform/resource/#{pagePath}",
+                "service" : "resource"
             }
         ]
 }
