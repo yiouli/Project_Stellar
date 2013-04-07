@@ -8,6 +8,10 @@
 			{
 				"name" : "userInfo",
 				"className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
+			},
+			{
+				"name" : "pageServe",
+				"className" : "org.stellar.gameplat.service.pageserve.PageService"
 			}
 		],
     "mapping" :
@@ -23,6 +27,12 @@
                 "pattern" : "/gameplatform/user/#{username}",
                 "exclude" : "/gameplatform/user/help",
                 "service" : "userInfo"
+            },
+            
+            {
+            	"name" : "pageServe",
+                "pattern" : "/gameplatform/page/#{pagePath}",
+                "service" : "pageServe"
             }
         ]
 }
