@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import org.stellar.gameplat.service.contract.IServiceContract;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
 import org.stellar.gameplat.service.webexchange.RequestInterpreter;
+import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 import org.stellar.gameplat.service.ServiceLoader;
 import org.stellar.gameplat.service.ServiceSetting;
 
@@ -62,15 +63,17 @@ class RequestDispatcher implements HttpHandler {
    		String url = t.getRequestURI().toString().toLowerCase();
    		String serviceClassName = mapper.getServiceClassName(method, url);
    		if(serviceClassName == null) {
-   			t.sendResponseHeaders(404, 0);
-   			t.getResponseBody().close();
+   			sendHttpResponse(t, 
+   					ResponseGenerator.serviceResponse(404, 
+   							"No service can handle the request"));
    			return;
    		}
    		IServiceContract service = loader.getServiceInstance(serviceClassName);
    		if(service == null) {
    			System.err.println("Service class not found: "+serviceClassName);
-   			t.sendResponseHeaders(404, 0);
-   			t.getResponseBody().close();
+   			sendHttpResponse(t, 
+   					ResponseGenerator.serviceResponse(500, 
+   							"Server configuration problem, service class not found"));
    			return;
    		}
    		String reqBody = read(t.getRequestBody());
@@ -83,10 +86,8 @@ class RequestDispatcher implements HttpHandler {
    		sendHttpResponse(t, service.handleRequest(url, method, reqBody, params));
 	}
 
-	/**
-	 * test stub
-	 * @throws IOException 
-	 */
+	//----test stub-------------------------------------------------------------------------------
+	
 	public static void main(String[] args) throws IOException {
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 10);
 		ServiceSetting.init("testInput/config.json");

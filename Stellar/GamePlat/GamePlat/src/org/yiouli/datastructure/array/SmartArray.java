@@ -18,7 +18,7 @@ public class SmartArray<T> {
 	public SmartArray(int capacity) {
 		item = (T[])new Object[capacity];
 		free = new ArrayList<Integer>(capacity);
-		for(int i = 0; i < capacity; i++)
+		for(int i = capacity-1; i >= 0; i--)
 			free.add(i);
 	}
 

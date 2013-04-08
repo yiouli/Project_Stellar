@@ -22,12 +22,20 @@ public class ServerBuilder {
 	
 	public HttpServer createServer(int port, String context) throws IOException {
 		HttpServer server = HttpServer.create(new InetSocketAddress(port), 10);
-		ServiceSetting.init("serviceConfig");
-		UrlMapper.init("webConfig");
+		ServiceSetting.init(serviceConfigPath);
+		UrlMapper.init(webConfigPath);
 		ServiceLoader.init();
 		server.createContext(context, 
 				new RequestDispatcher(UrlMapper.instance(), ServiceLoader.instance()));
 		server.setExecutor(null); // creates a default executor
 		return server;
+	}
+	
+	//----test stub-------------------------------------------------------------------
+	
+	public static void main(String[] args) throws IOException {
+		ServerBuilder builder = new ServerBuilder("testInput/config.json", "testInput/config.web.json");
+		builder.createServer(8000, "/gameplatform").start();
+		System.out.println("Server started...");
 	}
 }

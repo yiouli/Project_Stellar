@@ -11,5 +11,5 @@ public interface ILobbyService extends IServiceContract {
 	public boolean isReady(int lobbyId);
 	public ServiceResponse changeHost(int lobbyId, String username, String password, int newHost);
 	public ServiceResponse startGame(int lobbyId, String username, String password);
-	public ServiceResponse changeSetting(int lobbyId, String username, String password, String gameParams);
+	public ServiceResponse changeGameParams(int lobbyId, String username, String password, String gameParams);
 }
