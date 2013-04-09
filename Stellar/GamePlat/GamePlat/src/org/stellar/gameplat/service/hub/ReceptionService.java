@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import org.stellar.gameplat.service.contract.IReceptionService;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
 
-public class Reception implements IReceptionService {
+public class ReceptionService implements IReceptionService {
 	
 	private boolean checkCredential(String username, String password) {
 		return false;
@@ -19,7 +19,7 @@ public class Reception implements IReceptionService {
 	}
 
 	@Override
-	public boolean join(String username, String password, String gameId, String gameParams) {
+	public boolean accept(String username, String password, String gameId, String gameParams) {
 		if (!checkCredential(username, password))
 			return false;
 		// TODO Auto-generated method stub

@@ -1,0 +1,58 @@
+{
+	"service" :
+		[
+			{
+				"name" : "help",
+				"className" : "some manual html presenter"
+			},
+			{
+				"name" : "userInfo",
+				"className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
+			},
+			{
+				"name" : "resource",
+				"className" : "org.stellar.gameplat.service.resourceserve.ResourceService"
+			},
+			{
+				"name" : "lobby",
+				"className" : "org.stellar.gameplat.service.hub.LobbyService"
+			}
+		],
+    "mapping" :
+        [
+            {
+            	"name" : "help",
+                "method" : "GET",
+                "pattern" : "/gameplatform/user/help",
+                "service" : "help"
+            },
+            {
+            	"name" : "userInfo",
+                "pattern" : "/gameplatform/user/#{username}",
+                "exclude" : "/gameplatform/user/help",
+                "service" : "userInfo"
+            },
+            {
+            	"name" : "resource",
+                "method" : "GET",
+                "pattern" : "/gameplatform/resource/#{pagePath}",
+                "service" : "resource"
+            },
+            {
+            	"name" : "lobbyIds",
+                "method" : "GET",
+                "pattern" : "/gameplatform/lobby",
+                "service" : "lobby"
+            },
+            {
+            	"name" : "lobbyProperty",
+                "pattern" : "/gameplatform/lobby/#{lobbyId}/#{property}",
+                "service" : "lobby"
+            },
+            {
+            	"name" : "lobbyOperation",
+                "pattern" : "/gameplatform/lobby/#{lobbyId}",
+                "service" : "lobby"
+            }
+        ]
+}

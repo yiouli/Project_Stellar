@@ -1,0 +1,7 @@
+{
+    "repoDir" : "testInput/repo",
+    "userInfoViewUrl" : "user info url",
+    "lobbyViewUrl" : "lobby url",
+    "gameViewUrl" : "game view url",
+    "userInfoServiceUrl" : "http://localhost:9002"
+}

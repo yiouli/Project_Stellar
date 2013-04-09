@@ -69,7 +69,7 @@ public class ResourceService implements IResourceService {
 	
 	public static void main(String[] args) {
 		ResourceService serv = new ResourceService();
-		System.out.println(serv.getResouce("page/hello.html"));
+		System.out.println(serv.getResouce("resource/test/hello.html"));
 	}
 
 	
