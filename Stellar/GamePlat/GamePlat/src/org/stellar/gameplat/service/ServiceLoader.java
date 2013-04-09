@@ -46,4 +46,16 @@ public class ServiceLoader {
 			return null;
 		}
 	}
+	
+	public boolean hasServiceInstance(String className) {
+		return services.containsKey(className);
+	}
+	
+	public boolean addServiceInstance(IServiceContract service) {
+		String className = service.getClass().getName();
+		if(services.containsKey(className))
+			return false;
+		services.put(className, service);
+		return true;
+	}
 }

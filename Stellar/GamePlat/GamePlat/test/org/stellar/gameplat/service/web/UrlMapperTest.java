@@ -16,24 +16,31 @@ public class UrlMapperTest {
 
 	private static String path;
 	private static UrlMapper mapper;
+
+	private static String writeFile(String dir, String file, String content) throws IOException {
+		File f = new File(dir);
+		f.mkdirs();
+		String path = dir + "/" + file;
+		f = new File(path);
+		f.createNewFile();
+		BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+		writer.write(content);
+		writer.close();
+		return path;
+	}
 	
 	@BeforeClass
 	public static void setup() throws IOException {
 		String dir = "testInput";
-		File f = new File(dir);
-		f.mkdirs();
-		path = dir + "/UrlMapperTestConfig.web.json";
-		f = new File(path);
-		f.createNewFile();
-		BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-		writer.write("{\"service\" :[{\"name\" : \"help\",\"className\" : \"some manual html presenter\"},"
+		String file = "UrlMapperTestConfig.web.json";
+		String content = "{\"service\" :[{\"name\" : \"help\",\"className\" : \"some manual html presenter\"},"
 				+"{\"name\" : \"userInfo\",\"className\" : \"org.stellar.gameplat.service.userinfostore.UserInfoStore\"}],"
 				+"\"mapping\" :[{\"name\" : \"help\",\"method\" : \"GET\",\"pattern\" : \"/gameplatform/user/help\","
 				+"\"service\" : \"help\"},{\"name\" : \"userInfoGet\",\"method\" : \"GET\",\"pattern\" : \"/gameplatform/user/#{username}\","
 				+"\"service\" : \"userInfo\",\"exclude\" : \"/gameplatform/user/help\"},{\"name\" : \"userInfoPost\","
 				+"\"exclude\" : \"/gameplatform/user/help\",\"method\" : \"POST\",\"pattern\" : \"/gameplatform/user/#{username}\""
-				+",\"service\" : \"userInfo\"}]}");
-		writer.close();
+				+",\"service\" : \"userInfo\"}]}";
+		path = writeFile(dir, file, content);
 		UrlMapper.init(path);
 		mapper = UrlMapper.instance();
 	}
@@ -101,5 +108,10 @@ public class UrlMapperTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetVariablesNotMatching() {
 		mapper.getParameters("userInfoGet", "/gameplatform/user/help", "GET");
+	}
+	
+	@Test
+	public void testMultipleVariables() {
+		fail("Not implemented");
 	}
 }

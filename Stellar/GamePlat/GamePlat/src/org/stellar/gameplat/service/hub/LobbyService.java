@@ -1,6 +1,7 @@
 package org.stellar.gameplat.service.hub;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.stellar.gameplat.service.ServiceLoader;
@@ -16,6 +17,7 @@ import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 import org.yiouli.datastructure.array.SmartArray;
 
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpServer;
 
 /**
  * LobbyService should be created by Arranger or other programmatic clients,
@@ -79,7 +81,8 @@ public class LobbyService implements ILobbyService {
 		else if(property.equalsIgnoreCase("host"))
 			return createPropertyResponse("host", host(lId));
 		else if(property.equalsIgnoreCase("participant")
-				|| property.equalsIgnoreCase("participants"))
+				|| property.equalsIgnoreCase("participants")
+				|| property.equalsIgnoreCase("people"))
 			return createPropertyResponse("participant", participants(lId));
 		else if(property.equalsIgnoreCase("status"))
 			return createPropertyResponse("ready", isReady(lId));
@@ -112,6 +115,7 @@ public class LobbyService implements ILobbyService {
 			String lobbyId = params.get("lobbyId");
 			String property = params.get("property");
 			//get property, start game
+
 			if(lobbyId != null && property != null)
 				return handlePropertyRequest(lobbyId, reqMethod, property, reqBody);
 			//getLobbyById, changeHost, changeGameParams
@@ -148,7 +152,8 @@ public class LobbyService implements ILobbyService {
 		if(!lobbies.has(lobbyId))
 			return null;
 		Lobby<String> lobby = lobbies.get(lobbyId);
-		return lobby.getPlayers();
+		ArrayList<String> players = lobby.getPlayers();
+		return players.toArray(new String[players.size()]);
 	}
 
 	@Override
@@ -176,7 +181,7 @@ public class LobbyService implements ILobbyService {
 	@Override
 	public boolean isReady(int lobbyId) {
 		assert isInitialized();
-		if(lobbies.has(lobbyId))
+		if(!lobbies.has(lobbyId))
 			return false;
 		return lobbies.get(lobbyId).game.isReady();
 	}
@@ -258,7 +263,7 @@ public class LobbyService implements ILobbyService {
 
 		@Override
 		public boolean isReady() {
-			// TODO Auto-generated method stub
+			System.out.println("Game is ready!");
 			return true;
 		}
 
@@ -276,10 +281,11 @@ public class LobbyService implements ILobbyService {
 	
 	public static void main(String[] args) throws IOException {
 		ServerBuilder builder = new ServerBuilder("testInput/config.json", "testInput/config.web.json");
-		builder.createServer(8000, "/gameplatform").start();
-		System.out.println("Server started...");
-		LobbyService service = (LobbyService) ServiceLoader.instance()
-									.getServiceInstance(LobbyService.class.getName());
+		HttpServer server = builder.createServer(8000, "/gameplatform");
+		LobbyService service = new LobbyService();
 		service.createLobby(new MockGame(), new String[]{"user1", "user2"}, 4, 8);
+		ServiceLoader.instance().addServiceInstance(service);
+		server.start();
+		System.out.println("Server started...");
 	}
 }

@@ -165,7 +165,7 @@ public class UrlMapper {
 	
 	static class UrlPattern {
 		
-		private static final String VAR_REGEX = "#\\{(.+)\\}";
+		private static final String VAR_REGEX = "#\\{([^/#{?]+)\\}";
 		private static final int VAR_GROUP = 1;
 		
 		final String pattern;

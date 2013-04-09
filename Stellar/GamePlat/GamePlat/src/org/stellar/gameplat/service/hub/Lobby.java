@@ -1,5 +1,7 @@
 package org.stellar.gameplat.service.hub;
 
+import java.util.ArrayList;
+
 import org.stellar.gameplat.service.contract.IGameService;
 
 class Lobby<PlayerType> {
@@ -103,14 +105,13 @@ class Lobby<PlayerType> {
 		return player[index];
 	}
 	
-	PlayerType[] getPlayers() {
+	ArrayList<PlayerType> getPlayers() {
 		assert check();
-		@SuppressWarnings("unchecked")
-		PlayerType[] ret = (PlayerType[])new Object[playerCount];
+		ArrayList<PlayerType> ret = new ArrayList<PlayerType>(playerCount);
 		int i = 0;
 		for(PlayerType p : player) {
 			if (p != null)
-				ret[i++] = p;
+				ret.add(p);
 		}
 		assert i == playerCount;
 		return ret;
