@@ -84,7 +84,8 @@ public class LobbyService implements ILobbyService {
 				|| property.equalsIgnoreCase("participants")
 				|| property.equalsIgnoreCase("people"))
 			return createPropertyResponse("participant", participants(lId));
-		else if(property.equalsIgnoreCase("status"))
+		else if(property.equalsIgnoreCase("status")
+				|| property.equalsIgnoreCase("ready"))
 			return createPropertyResponse("ready", isReady(lId));
 		else
 			return ResponseGenerator.serviceResponse(404, "Unkown property of lobby");
