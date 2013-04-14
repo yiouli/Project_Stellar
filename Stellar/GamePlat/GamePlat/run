@@ -1,0 +1,1 @@
+java -cp .:bin:lib/yiouli.jar:lib/yioulitest.jar:lib/google-gson-2.2.2/gson-2.2.2.jar org.stellar.gameplat.service.hub.LobbyService

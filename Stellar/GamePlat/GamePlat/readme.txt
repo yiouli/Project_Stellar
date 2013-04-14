@@ -9,4 +9,4 @@ For Windows:
 Run cmd, cd to current directory then enter "run" in cmd.
 
 For Linux based:
-Open terminal, cd to current directory, "chmod 755 run.cmd", then "sh run.cmd". 
+Open terminal, cd to current directory, then "sh run"
