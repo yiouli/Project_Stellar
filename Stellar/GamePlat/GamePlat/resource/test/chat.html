@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Online Chat</title>
+		<script type="text/javascript">
+
+			var ws = new WebSocket("ws://localhost:20500");
+			var firstResponse = true;
+		
+			function setText(elem, text) {
+		        if(document.all){
+		        	elem.innerText = text;
+		        } else{
+		        	elem.textContent = text;
+		        }
+			}
+		
+			function initWebSocket() {
+				var info = document.getElementById("info");
+				ws.onopen = function()
+				{
+					setText(info, "Connected");
+				};
+				ws.onmessage = function (evt) 
+				{ 
+				   	var msg = evt.data;
+				   	if(firstResponse) {
+					   	setText(document.getElementById("user"), msg);
+					   	firstResponse = false;
+				   	}
+				   	else {
+					   	var line = document.createElement("li");
+					   	setText(line, msg);
+					   	document.getElementById("chats").appendChild(line);
+				   	}
+				};
+				ws.onclose = function()
+				{ 
+					setText(info, "Disconnected");
+				};
+			}
+
+			function send(e) {
+				 var code = (e.keyCode ? e.keyCode : e.which);
+				 if(code == 13) {
+					 ws.send(this.value);
+				 }
+			 }
+			
+			function init() {
+				initWebSocket();
+				document.getElementById("msg").addEventListener("keypress", send, false);
+			}
+			
+			window.onload = init;
+		</script>
+	</head>
+	<body>
+		<div id="info"></div>
+		<div id="user"></div>
+		<input id="msg" type="text" />
+		<ul id="chats"></ul>
+		<div>Powered by Test Interactive Service</div>
+	</body>
+</html>

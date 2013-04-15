@@ -16,6 +16,7 @@ public class ResourceService implements IResourceService {
 
 	public static final String FOLDER = "resource";
 	public final FileNameMap contentTypeMap;
+	private final String lb = System.getProperty("line.separator");
 	
 	public ResourceService() {
 		contentTypeMap = URLConnection.getFileNameMap();
@@ -54,8 +55,10 @@ public class ResourceService implements IResourceService {
 			BufferedReader fr = new BufferedReader(new FileReader(f));
 			StringBuffer sb = new StringBuffer();
 			String line = null;
-			while((line = fr.readLine())!=null)
+			while((line = fr.readLine())!=null) {
 				sb.append(line);
+				sb.append(lb);
+			}
 			fr.close();
 			return sb.toString();
 		} catch (IOException e) {
