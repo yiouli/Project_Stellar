@@ -16,16 +16,17 @@ public class TestInteractiveService extends InteractiveService<String> {
 
 	@Override
 	protected String onConnect() {
-		String u = "user"+String.valueOf(userIdx);
-		users.add(u);
-		System.out.println(u + " created!");
-		return u;
+		String user = "user"+String.valueOf(userIdx++);
+		users.add(user);
+		System.out.println(user + " created!");
+		return user;
 	}
 
 	@Override
 	protected void onOpen(String user) {
 		try {
-			push(user);
+			push(user, user);
+			push(user + " joined!");
 		} catch(Exception ex) {
 			System.err.println("Fail to push : "+ex.getMessage());
 			ex.printStackTrace();
@@ -44,7 +45,13 @@ public class TestInteractiveService extends InteractiveService<String> {
 
 	@Override
 	protected void onDisconnect(String user) {
-		System.out.println(user + " disconnected!");
+		try {
+			System.out.println(user + " disconnected!");
+			push(user + " left!");
+		} catch(Exception ex) {
+			System.err.println("Fail to push : "+ex.getMessage());
+			ex.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) throws IOException {

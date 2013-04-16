@@ -23,6 +23,7 @@ public class WebSocketExchange {
 	}
 	
 	private Request req = null;
+	private final String lb = System.getProperty("line.separator");
 	
 	private boolean isUpgradeRequest(Request req) {
 		return "websocket".equalsIgnoreCase(req.headers.get("upgrade"))
@@ -43,7 +44,6 @@ public class WebSocketExchange {
 	
 	protected String successResponse() {
 		StringBuffer sb = new StringBuffer();
-		String lb = System.getProperty("line.separator");
 		sb.append("HTTP/1.1 101 Switching Protocols");
 		sb.append(lb);
 		sb.append("Upgrade: websocket");
@@ -63,7 +63,7 @@ public class WebSocketExchange {
 	}
 	
 	protected String invalidOperationResponse() {
-		return "HTTP/1.1 400 Bad Request";
+		return "HTTP/1.1 400 Bad Request" + lb;
 	}
 	
 	public String handleRequest(String request) {

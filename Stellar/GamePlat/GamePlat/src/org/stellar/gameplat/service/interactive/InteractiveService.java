@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 
-import org.yiouli.dragon.communication.socket.HttpSocketHost;
+import org.yiouli.dragon.communication.socket.WebSocketHost;
 import org.yiouli.dragon.communication.socket.IConnectionListener;
 import org.yiouli.dragon.communication.socket.IMessageListener;
 
@@ -75,7 +75,7 @@ public abstract class InteractiveService<Client> {
 	}
 	
 	protected final int port;
-	private final HttpSocketHost host;
+	private final WebSocketHost host;
 	private Hashtable<Integer, Client> idToClient;
 	private Hashtable<Client, Integer> clientToId;	
 	private HashSet<Integer> upgraded;
@@ -85,7 +85,7 @@ public abstract class InteractiveService<Client> {
 		idToClient = new Hashtable<Integer, Client>();
 		clientToId = new Hashtable<Client, Integer>();
 		upgraded = new HashSet<Integer>();
-		host = new HttpSocketHost(port);
+		host = new WebSocketHost(port);
 		host.addConnectionListener(new ConnectionHandler());
 		host.addMessageListener(new WebSocketHandshaker());
 		host.addMessageListener(new ActionHandler());

@@ -3,7 +3,6 @@ package org.yiouli.dragon.communication.socket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
@@ -16,7 +15,6 @@ public abstract class RawSocketConnection extends SocketConnection {
 	protected RawDataReceiver receiver;
 	protected InputStream rin;
 	protected OutputStream rout;
-	protected OutputStreamWriter writer;
 	
 	public RawSocketConnection() {
 		super();
@@ -39,7 +37,6 @@ public abstract class RawSocketConnection extends SocketConnection {
 		this.sock = sock;
 		rin = sock.getInputStream();
 		rout = sock.getOutputStream();
-		writer = new OutputStreamWriter(rout);
 		//work around for init call from super constructor
 		if(receiver == null)
 			return;
@@ -53,12 +50,12 @@ public abstract class RawSocketConnection extends SocketConnection {
 		}
 	}
 	
-	protected abstract String serialize(Object msg);
+	protected abstract byte[] serialize(Object msg) throws IOException;
 	
 	@Override
 	public void sendMessage(Object msg) throws IOException {
-		writer.write(serialize(msg));
-		writer.flush();
+		rout.write(serialize(msg));
+		rout.flush();
 		synchronized(msgListeners) {
 			for(IMessageListener listener : msgListeners)
 				if(!listener.handleMessage(0, msg, false))

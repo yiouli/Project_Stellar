@@ -43,6 +43,7 @@
 				 var code = (e.keyCode ? e.keyCode : e.which);
 				 if(code == 13) {
 					 ws.send(this.value);
+					 this.value = "";
 				 }
 			 }
 			
