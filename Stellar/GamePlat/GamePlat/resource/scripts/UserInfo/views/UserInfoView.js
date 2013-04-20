@@ -37,7 +37,7 @@ Dependency:
                that.$el.find("#hint").show();
             }
          });
-      },
+      }
 
 
 
