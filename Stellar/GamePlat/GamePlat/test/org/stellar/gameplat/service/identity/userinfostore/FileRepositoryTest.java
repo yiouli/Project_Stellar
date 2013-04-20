@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.userinfostore;
+package org.stellar.gameplat.service.identity.userinfostore;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import org.junit.Test;
+import org.stellar.gameplat.service.identity.userinfostore.FileRepository;
 import org.yiouli.testutil.RandomGenerator;
 
 public class FileRepositoryTest {

@@ -1,9 +1,10 @@
-package org.stellar.gameplat.service.userinfostore;
+package org.stellar.gameplat.service.identity.userinfostore;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -70,6 +71,23 @@ public class UserInfoClient {
 	
 	public boolean authenticate(String username, String password) throws IOException {
 		return getUserInfo(username, password) != null;
+	}
+	
+	public void setUserInfo(UserInfo info) throws IOException {
+		if (info == null || info.username == null)
+			throw new NullPointerException();
+		assert hostUrl != null;
+		String url = UrlMapper.instance().getUrl("userInfo", new String[]{info.username});
+		URL host = new URL(hostUrl + url);
+		HttpURLConnection connection = (HttpURLConnection)host.openConnection();
+	    connection.setDoOutput(true);
+        OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+        out.write(new Gson().toJson(info));
+        out.close();
+        if (connection.getResponseCode()!=200) {
+        	InputStream is = connection.getErrorStream();
+        	throw new IOException(read(is));
+        }
 	}
 	
 	//----test stub--------------------------------------------------------------------

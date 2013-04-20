@@ -4,6 +4,8 @@ import java.util.Hashtable;
 
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
 
+import com.sun.net.httpserver.HttpExchange;
+
 public interface IServiceContract {
 
 	/**
@@ -17,6 +19,6 @@ public interface IServiceContract {
 	 *        the later appeared parameter value will be taken.
 	 * @return
 	 */
-	public ServiceResponse handleRequest(String url, String method,
-			String reqBody, Hashtable<String, String> params);
+	public ServiceResponse handleRequest(HttpExchange httpExchange, String url, 
+			String method, String reqBody, Hashtable<String, String> params);
 }

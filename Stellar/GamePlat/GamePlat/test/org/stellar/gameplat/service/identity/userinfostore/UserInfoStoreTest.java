@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.userinfostore;
+package org.stellar.gameplat.service.identity.userinfostore;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.stellar.gameplat.service.ServiceSetting;
 import org.stellar.gameplat.service.contract.data.UserInfo;
+import org.stellar.gameplat.service.identity.userinfostore.UserInfoStore;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

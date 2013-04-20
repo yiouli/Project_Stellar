@@ -9,7 +9,7 @@ import org.stellar.gameplat.service.ServiceSetting;
 import org.stellar.gameplat.service.contract.IGameService;
 import org.stellar.gameplat.service.contract.ILobbyService;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
-import org.stellar.gameplat.service.userinfostore.UserInfoClient;
+import org.stellar.gameplat.service.identity.userinfostore.UserInfoClient;
 import org.stellar.gameplat.service.web.ServerBuilder;
 import org.stellar.gameplat.service.webexchange.RequestInterpreter;
 import org.stellar.gameplat.service.webexchange.RequestMethod;
@@ -17,6 +17,7 @@ import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 import org.yiouli.datastructure.array.SmartArray;
 
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 /**
@@ -107,8 +108,8 @@ public class LobbyService implements ILobbyService {
 	}
 	
 	@Override
-	public ServiceResponse handleRequest(String url, String method,
-			String reqBody, Hashtable<String, String> params) {
+	public ServiceResponse handleRequest(HttpExchange httpExchange, String url, 
+			String method, String reqBody, Hashtable<String, String> params) {
 		assert isInitialized();
 		assert url != null && method != null && params != null;
 		try {
@@ -257,8 +258,8 @@ public class LobbyService implements ILobbyService {
 	private static class MockGame implements IGameService {
 
 		@Override
-		public ServiceResponse handleRequest(String url, String method,
-				String reqBody, Hashtable<String, String> params) {
+		public ServiceResponse handleRequest(HttpExchange httpExchange, String url, 
+				String method, String reqBody, Hashtable<String, String> params) {
 			throw new UnsupportedOperationException();
 		}
 

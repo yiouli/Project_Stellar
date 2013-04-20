@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.userinfostore;
+package org.stellar.gameplat.service.identity.userinfostore;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

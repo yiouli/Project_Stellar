@@ -12,6 +12,8 @@ import org.stellar.gameplat.service.contract.IResourceService;
 import org.stellar.gameplat.service.contract.data.ServiceResponse;
 import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 
+import com.sun.net.httpserver.HttpExchange;
+
 public class ResourceService implements IResourceService {
 
 	public static final String FOLDER = "resource";
@@ -29,8 +31,8 @@ public class ResourceService implements IResourceService {
 	}
 	
 	@Override
-	public ServiceResponse handleRequest(String url, String method,
-			String reqBody, Hashtable<String, String> params) {
+	public ServiceResponse handleRequest(HttpExchange httpExchange, String url, 
+			String method, String reqBody, Hashtable<String, String> params) {
 		String resourcePath = FOLDER+ "/"+params.get("pagePath");
 		String content = getResouce(resourcePath);
 		if(content == null)

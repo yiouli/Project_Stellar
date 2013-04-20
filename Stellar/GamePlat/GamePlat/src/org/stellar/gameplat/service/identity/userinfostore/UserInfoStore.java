@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.userinfostore;
+package org.stellar.gameplat.service.identity.userinfostore;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -13,6 +13,7 @@ import org.stellar.gameplat.service.webexchange.RequestMethod;
 import org.stellar.gameplat.service.webexchange.ResponseGenerator;
 
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
 
 public class UserInfoStore implements IUserInfoService {
 
@@ -93,7 +94,8 @@ public class UserInfoStore implements IUserInfoService {
 	}
 
 	@Override
-	public ServiceResponse handleRequest(String url, String method, String reqBody, Hashtable<String, String> params) {
+	public ServiceResponse handleRequest(HttpExchange httpExchange, String url, 
+			String method, String reqBody, Hashtable<String, String> params) {
 		try {
 			UserInfo info = gson.fromJson(reqBody, UserInfo.class);
 			if(info == null)

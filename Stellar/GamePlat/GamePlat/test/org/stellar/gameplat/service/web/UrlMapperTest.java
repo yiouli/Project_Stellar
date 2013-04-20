@@ -34,7 +34,7 @@ public class UrlMapperTest {
 		String dir = "testInput";
 		String file = "UrlMapperTestConfig.web.json";
 		String content = "{\"service\" :[{\"name\" : \"help\",\"className\" : \"some manual html presenter\"},"
-				+"{\"name\" : \"userInfo\",\"className\" : \"org.stellar.gameplat.service.userinfostore.UserInfoStore\"}],"
+				+"{\"name\" : \"userInfo\",\"className\" : \"org.stellar.gameplat.service.identity.userinfostore.UserInfoStore\"}],"
 				+"\"mapping\" :[{\"name\" : \"help\",\"method\" : \"GET\",\"pattern\" : \"/gameplatform/user/help\","
 				+"\"service\" : \"help\"},{\"name\" : \"userInfoGet\",\"method\" : \"GET\",\"pattern\" : \"/gameplatform/user/#{username}\","
 				+"\"service\" : \"userInfo\",\"exclude\" : \"/gameplatform/user/help\"},{\"name\" : \"userInfoPost\","
@@ -54,7 +54,7 @@ public class UrlMapperTest {
 	@Test
 	public void testGetServiceClassNameByServiceName() {
 		assertEquals(mapper.getServiceClassName("help"), "some manual html presenter");
-		assertEquals(mapper.getServiceClassName("userInfo"), "org.stellar.gameplat.service.userinfostore.UserInfoStore");
+		assertEquals(mapper.getServiceClassName("userInfo"), "org.stellar.gameplat.service.identity.userinfostore.UserInfoStore");
 		assertNull(mapper.getServiceClassName("randomName"));
 	}
 
@@ -63,7 +63,7 @@ public class UrlMapperTest {
 		assertEquals("help with GET", "some manual html presenter", 
 				mapper.getServiceClassName("Get", "/gameplatform/user/help"));
 		assertNull("help with POST", mapper.getServiceClassName("Post", "/gameplatform/user/help"));
-		assertEquals("userInfo with GET", "org.stellar.gameplat.service.userinfostore.UserInfoStore",
+		assertEquals("userInfo with GET", "org.stellar.gameplat.service.identity.userinfostore.UserInfoStore",
 				mapper.getServiceClassName("Get", "/gameplatform/user/user1"));
 		assertNull("other service", mapper.getServiceClassName("Get", "otherservice/user1"));
 	}

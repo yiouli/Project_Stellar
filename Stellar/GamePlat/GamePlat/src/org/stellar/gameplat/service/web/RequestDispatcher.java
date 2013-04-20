@@ -83,7 +83,7 @@ class RequestDispatcher implements HttpHandler {
 			if(!params.containsKey(entry.getKey()))
 				params.put(entry.getKey(), 
 						RequestInterpreter.getHeaderEntryValueString(entry.getValue()));
-   		sendHttpResponse(t, service.handleRequest(url, method, reqBody, params));
+   		sendHttpResponse(t, service.handleRequest(t, url, method, reqBody, params));
 	}
 
 	//----test stub-------------------------------------------------------------------------------
