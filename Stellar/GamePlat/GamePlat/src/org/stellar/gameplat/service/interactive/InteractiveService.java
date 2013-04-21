@@ -2,12 +2,12 @@ package org.stellar.gameplat.service.interactive;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 
-import org.yiouli.dragon.communication.socket.WebSocketHost;
 import org.yiouli.dragon.communication.socket.IConnectionListener;
 import org.yiouli.dragon.communication.socket.IMessageListener;
+import org.yiouli.dragon.communication.socket.WebSocketHost;
+import org.yiouli.dragon.framework.exception.AggregatedException;
 
 /**
  * String based webSocket service
@@ -32,36 +32,6 @@ public abstract class InteractiveService<Client> {
 		}
 	}
 	
-	private class WebSocketHandshaker implements IMessageListener {
-
-		@Override
-		public boolean handleMessage(int connectionId, Object msg,
-				boolean isIncoming) {
-			if(isIncoming && !upgraded.contains(connectionId)) {
-				//if not upgraded to web sock, block other message handlers
-				//check if is websocket update
-				//if not return invalid operation
-				//if is web socket handshake request, return response, unblock
-				String req = (String)msg;
-				WebSocketExchange exchange = new WebSocketExchange();
-				try {
-					if(exchange.isUpgradeRequest(req)) {
-						host.sendMessage(connectionId, exchange.successResponse());
-						upgraded.add(connectionId);
-						onOpen(idToClient.get(connectionId));
-					}
-					else
-						host.sendMessage(connectionId, exchange.invalidOperationResponse());
-				} catch (IOException e) {
-					System.err.println("Fail to push : "+e.getMessage());
-					e.printStackTrace();
-				}
-				return false;
-			}
-			return true;
-		}
-	}
-	
 	private class ActionHandler implements IMessageListener {
 		
 		@Override
@@ -78,16 +48,13 @@ public abstract class InteractiveService<Client> {
 	private final WebSocketHost host;
 	private Hashtable<Integer, Client> idToClient;
 	private Hashtable<Client, Integer> clientToId;	
-	private HashSet<Integer> upgraded;
 	
 	public InteractiveService(int port) throws IOException {
 		this.port = port;
 		idToClient = new Hashtable<Integer, Client>();
 		clientToId = new Hashtable<Client, Integer>();
-		upgraded = new HashSet<Integer>();
 		host = new WebSocketHost(port);
 		host.addConnectionListener(new ConnectionHandler());
-		host.addMessageListener(new WebSocketHandshaker());
 		host.addMessageListener(new ActionHandler());
 	}
 	
@@ -95,6 +62,7 @@ public abstract class InteractiveService<Client> {
 		Client client = onConnect();
 		idToClient.put(connectionId, client);
 		clientToId.put(client, connectionId);
+		onOpen(client);
 	}
 	
 	private void removeClient(int connectionId) {
@@ -128,16 +96,12 @@ public abstract class InteractiveService<Client> {
 		return host.isAlive();
 	}
 
-	protected void push(String message) throws IOException {
-		for(Integer id : upgraded)
-			host.sendMessage(id, message);
+	protected void push(String message) throws AggregatedException {
+		host.sendToAll(message);
 	}
 	
-	protected void pushToOthers(Client client, String message) throws IOException {
-		int connId = clientToId.get(client);
-		for(Integer id : upgraded)
-			if(id != connId)
-				host.sendMessage(id, message);
+	protected void pushToOthers(Client client, String message) throws AggregatedException {
+		host.sendToOthers(clientToId.get(client), message);
 	}
 	
 	protected void push(Client client, String message) throws IOException {

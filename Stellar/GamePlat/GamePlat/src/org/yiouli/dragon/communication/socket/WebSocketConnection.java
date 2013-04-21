@@ -7,6 +7,10 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import org.yiouli.dragon.communication.socket.IConnectionListener;
+import org.yiouli.dragon.communication.socket.IMessageListener;
+import org.yiouli.dragon.communication.socket.TerminationLstr;
+
 public class WebSocketConnection extends RawSocketConnection {
 
 	protected boolean handshaked;

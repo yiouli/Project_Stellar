@@ -7,7 +7,7 @@
 			},
 			{
 				"name" : "userInfo",
-				"className" : "org.stellar.gameplat.service.userinfostore.UserInfoStore"
+				"className" : "org.stellar.gameplat.service.identity.userinfostore.UserInfoStore"
 			},
 			{
 				"name" : "resource",

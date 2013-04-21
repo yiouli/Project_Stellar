@@ -1,4 +1,4 @@
-package org.stellar.gameplat.service.interactive;
+package org.yiouli.dragon.communication.socket;
 
 import java.util.Hashtable;
 
@@ -23,7 +23,7 @@ public class WebSocketExchange {
 	}
 	
 	private Request req = null;
-	private final String lb = System.getProperty("line.separator");
+	private final String lb = "\r\n";
 	
 	private boolean isUpgradeRequest(Request req) {
 		return "websocket".equalsIgnoreCase(req.headers.get("upgrade"))
