@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.yiouli.dragon.communication.socket.IConnectionListener;
 import org.yiouli.dragon.communication.socket.IMessageListener;
@@ -20,8 +20,8 @@ public class WebSocketConnection extends RawSocketConnection {
 	}
 
 	public WebSocketConnection(Socket sock,
-			List<IConnectionListener> connListeners,
-			List<IMessageListener> msgListeners) throws IOException {
+			LinkedList<IConnectionListener> connListeners,
+			LinkedList<IMessageListener> msgListeners) throws IOException {
 		super(sock, connListeners, msgListeners);
 		init(new WebSocketDataReceiver(connId, rin, msgListeners, new TerminationLstr(this)));
 		handshaked = false;

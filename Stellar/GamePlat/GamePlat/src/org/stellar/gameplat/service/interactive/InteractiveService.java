@@ -30,6 +30,11 @@ public abstract class InteractiveService<Client> {
 			}
 			return true;
 		}
+
+		@Override
+		public boolean isValid() {
+			return true;
+		}
 	}
 	
 	private class ActionHandler implements IMessageListener {
@@ -40,6 +45,11 @@ public abstract class InteractiveService<Client> {
 			if(isIncoming) {
 				onMessage(idToClient.get(connectionId), (String)msg);
 			}
+			return true;
+		}
+
+		@Override
+		public boolean isValid() {
 			return true;
 		}
 	}

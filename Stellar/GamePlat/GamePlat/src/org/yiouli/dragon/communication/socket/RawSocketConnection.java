@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.yiouli.dragon.communication.socket.IConnectionListener;
 import org.yiouli.dragon.communication.socket.IMessageListener;
@@ -21,8 +21,8 @@ public abstract class RawSocketConnection extends SocketConnection {
 	}
 	
 	public RawSocketConnection(Socket sock,
-			List<IConnectionListener> connListeners, 
-			List<IMessageListener> msgListeners) throws IOException {
+			LinkedList<IConnectionListener> connListeners, 
+			LinkedList<IMessageListener> msgListeners) throws IOException {
 		super(sock, connListeners, msgListeners);
 	}
 	

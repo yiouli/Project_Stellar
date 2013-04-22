@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.yiouli.dragon.communication.socket.IMessageListener;
 import org.yiouli.dragon.framework.common.ICommand;
@@ -17,7 +17,7 @@ public class WebSocketDataReceiver extends RawDataReceiver {
 	private boolean handshaked = false;
 	
 	public WebSocketDataReceiver(int connectionId, InputStream rin,
-			List<IMessageListener> listeners, ICommand<Boolean> terminationLstr) {
+			LinkedList<IMessageListener> listeners, ICommand<Boolean> terminationLstr) {
 		super(connectionId, rin, listeners, terminationLstr);
 	}
 

@@ -2,7 +2,7 @@ package org.yiouli.dragon.communication.socket;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.yiouli.dragon.framework.common.ICommand;
 import org.yiouli.dragon.framework.logging.EventMessage;
@@ -13,7 +13,7 @@ public abstract class RawDataReceiver extends MessageReceiver {
 	protected final InputStream rin;
 	
 	RawDataReceiver(int connectionId, InputStream rin, 
-			List<IMessageListener> listeners, 
+			LinkedList<IMessageListener> listeners, 
 			ICommand<Boolean> terminationLstr) {
 		super(connectionId, null, listeners, terminationLstr);
 		if(rin == null)

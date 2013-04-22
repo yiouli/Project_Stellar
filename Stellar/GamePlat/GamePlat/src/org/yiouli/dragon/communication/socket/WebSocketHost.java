@@ -99,6 +99,11 @@ public class WebSocketHost extends SocketHost {
 			}
 			return true;
 		}
+
+		@Override
+		public boolean isValid() {
+			return true;
+		}
 	}
 	
 	private class ConnectionLstrFilter implements IConnectionListener {
@@ -115,6 +120,11 @@ public class WebSocketHost extends SocketHost {
 			if (!upgraded.contains(connectionId))
 				return false;
 			return connectionListener.handleConnection(connectionId, isOnConnect);
+		}
+
+		@Override
+		public boolean isValid() {
+			return true;
 		}
 	}
 }
