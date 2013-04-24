@@ -15,7 +15,7 @@ public class TestInteractiveService extends InteractiveService<String> {
 	}
 
 	@Override
-	protected String onConnect() {
+	protected String onConnect(int connectionId) {
 		String user = "user"+String.valueOf(userIdx++);
 		users.add(user);
 		System.out.println(user + " created!");

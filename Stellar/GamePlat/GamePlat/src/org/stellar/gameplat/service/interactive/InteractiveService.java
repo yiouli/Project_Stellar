@@ -69,7 +69,7 @@ public abstract class InteractiveService<Client> {
 	}
 	
 	private void addClient(int connectionId) {
-		Client client = onConnect();
+		Client client = onConnect(connectionId);
 		idToClient.put(connectionId, client);
 		clientToId.put(client, connectionId);
 		onOpen(client);
@@ -124,7 +124,7 @@ public abstract class InteractiveService<Client> {
 		host.removeConnection(connId);
 	}
 	
-	protected abstract Client onConnect();
+	protected abstract Client onConnect(int connectionId);
 	
 	protected abstract void onOpen(Client client);
 	
