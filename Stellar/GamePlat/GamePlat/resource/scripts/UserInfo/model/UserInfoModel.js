@@ -1,7 +1,8 @@
 //Dependency Backbone, Stellar, Utility
 
 (function(){
-	var namespace = window.Stellar || {};
+	window.Stellar = window.Stellar || {};
+	var namespace = window.Stellar;
 	namespace.UserInfoModel = Backbone.Model.extend({
 		defaults : {
 			userInfo : {}

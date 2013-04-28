@@ -1,6 +1,7 @@
 //LobbyModel.js
 (function(){
-    var namespace = window.Stellar || {};
+    window.Stellar = window.Stellar || {};
+    var namespace = window.Stellar;
     namespace.LobbyModel = Backbone.Model.extend({
 
     });

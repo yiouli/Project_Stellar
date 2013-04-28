@@ -50,9 +50,13 @@ class RequestDispatcher implements HttpHandler {
    			String key = enumKey.nextElement();
    			headers.set(key, res.headers.get(key));
    		}
-   		t.sendResponseHeaders(res.status, res.body.length());
+
+        byte[] data = res.body.getBytes();
+        System.out.println(data.length);
+   		t.sendResponseHeaders(res.status, data.length);
    		OutputStream os = t.getResponseBody();
-   		os.write(res.body.getBytes());
+   		os.write(data);
+        os.flush();
    		os.close();
 		
 	}
