@@ -6,4 +6,4 @@
 	var model = new namespace.UserInfoModel(defaults);
 	var userInfoView = new namespace.UserInfoView({model: model, el: $("#user_info_containter")});
 
-}())
+}());

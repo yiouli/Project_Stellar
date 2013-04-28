@@ -3,8 +3,7 @@ Dependency:
 1. /lib/utility.js
 */
 (function(){
-   window.Stellar = window.Stellar || {};
-   var namespace = window.Stellar;
+   var namespace = window.Stellar || {};
    namespace.UserInfoView = Backbone.View.extend({
       initialize : function(){
          var that = this,
