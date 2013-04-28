@@ -45,6 +45,9 @@ public class ResourceService implements IResourceService {
 
 	@Override
 	public String getContentType(String resourcePath) {
+		String ext = resourcePath.substring(resourcePath.lastIndexOf('.'));
+		if (ext.startsWith(".js"))
+			return "text/javascript";
 		return contentTypeMap.getContentTypeFor(resourcePath);
 	}
 	
