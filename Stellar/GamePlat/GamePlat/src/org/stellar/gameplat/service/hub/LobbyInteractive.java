@@ -12,7 +12,8 @@ public class LobbyInteractive<PlayerType> extends InteractiveService<PlayerType>
 	}
 
 	@Override
-	protected PlayerType onConnect(int a) {
+
+	protected PlayerType onConnect(int connectionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
